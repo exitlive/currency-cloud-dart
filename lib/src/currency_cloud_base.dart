@@ -1,65 +1,67 @@
-library currency_cloud.base;
+part of currency_cloud;
 
-import 'dart:convert';
-import 'dart:io';
+final Logger log = new Logger('CurrencyCloud');
 
-import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
-
-class CurrencyCloud {
+abstract class CurrencyCloudApi {
   final String baseUrl = 'https://devapi.thecurrencycloud.com/v2';
-  final Logger log = new Logger('CurrencyCloud');
 
-  var _authToken;
+  AuthToken _authToken;
 
-  static var _instance;
+  CurrencyCloudApi(this._authToken);
 
-  static getInstance() {
-    return _instance ??= new CurrencyCloud._internal();
-  }
-
-  CurrencyCloud._internal() {}
-
-  /// Authenticates this [CurrencyCloud] using given [loginId] and [apiKey]. This [CurrencyCloud] instance can
-  /// only be used after authentication.
-  authenticate(String loginId, String apiKey) async {
-    // Make sure we are in unauthenticated state
-    _authToken = null;
-
-    var url = '/authenticate/api';
-    var body = {};
-    body['login_id'] = loginId;
-    body['api_key'] = apiKey;
-
-    await _sendApiRequest(url, body: body);
-
-    _authToken = body['auth_token'];
-  }
-
-  _sendApiRequest(String methodUrl, {Map body}) async {
+  /// Sets auth headers in provided [headers] and sends HTTP GET request to
+  /// given methodUrl. Beware [headers] are being modified!
+  _get(String methodUrl, {Map<String, String> headers}) async {
     final String url = baseUrl + methodUrl;
 
+    _setAuthHeader(headers);
+
+    return await http.get(url, headers: headers);
+  }
+
+  _post(String methodUrl, {Map body, Map<String, String> headers}) async {
+    final String url = baseUrl + methodUrl;
+
+    _setAuthHeader(headers);
     body ??= {};
 
-    if(_authToken != null) {
-      body['auth_token'] = _authToken;
+    return await http.post(url, headers: headers, body: body);
+  }
+
+  /// Sets the 'X-Auth-Token' header in a given Map of [headers] if authToken has been set before. If [headers]
+  /// is not being provided returns a [headers] Map only containing of the set 'X-Auth-Token'.
+  _setAuthHeader([Map<String, String> headers]) {
+    headers ??= {};
+
+    if (_authToken.isSet) {
+      headers['X-Auth-Token'] = _authToken.value;
     }
 
-    return http.post(url, body: body).then((response) {
-      final responseBody = JSON.decode(response.body);
-
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        log.severe('There was a Problem with a CurrencyCloud API request to ${url}');
-        log.finest('${response.body}');
-        throw new CurrencyCloudException('Request returned ');
-      } else {
-        log.finest('Response body: ' + response.body.toString());
-      }
-
-      return responseBody;
-    });
+    return headers;
   }
 }
+
+class CurrencyCloud {
+  AuthToken authToken;
+
+  var authenticate;
+
+  CurrencyCloud() {
+    authToken = new AuthToken();
+    authenticate = new AuthenticateApi(authToken);
+  }
+}
+
+class CurrencyCloudRequest {
+  var url;
+
+  send() {
+    // _get or _post
+    // return parse JSON.decode(response.body);
+  }
+}
+
+class CurrencyCloudResponse {}
 
 class CurrencyCloudException implements Exception {
   String name;
@@ -67,4 +69,10 @@ class CurrencyCloudException implements Exception {
   String code;
 
   CurrencyCloudException(this.msg);
+}
+
+class AuthToken {
+  String _value;
+  String get value => _value;
+  bool get isSet => _value != null;
 }
