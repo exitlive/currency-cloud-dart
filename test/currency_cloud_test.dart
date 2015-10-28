@@ -12,5 +12,5 @@ import '../config/config.dart';
 part 'src/authenticate_api_test.dart';
 
 void main() {
-//  authenticate_api_test();
+  authenticate_api_test();
 }

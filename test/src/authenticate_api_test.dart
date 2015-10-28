@@ -1,20 +1,34 @@
 part of currency_cloud.test;
 
 authenticate_api_test() {
-  group('authenticate', () {
-    var cc;
-    var loginId;
-    var apiKey;
+  group('unit tests', () {
+    group('authenticate', () {
+      var currencyCloudMock;
 
-    setUp(() {
-      loginId = Config.loginId;
-      apiKey = Config.apiKey;
+      setUp(() {
 
-      cc = CurrencyCloud.getInstance();
+      });
     });
+  });
 
-    test('First Test', () async {
-      await cc.authenticate(loginId, apiKey);
+  group('integration tests', () {
+    group('authenticate', () {
+      var cc;
+      var loginId;
+      var apiKey;
+
+      setUp(() {
+        loginId = Config.loginId;
+        apiKey = Config.apiKey;
+
+        cc = new CurrencyCloud();
+      });
+
+      test('authenticate.api integration test, should set authToken', () async {
+        expect(cc.isAuthenticated, false);
+        await cc.authApi.authenticate(loginId, apiKey);
+        expect(cc.isAuthenticated, true);
+      });
     });
   });
 }
