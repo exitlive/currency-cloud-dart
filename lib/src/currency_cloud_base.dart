@@ -1,17 +1,25 @@
 part of currency_cloud;
 
-final Logger log = new Logger('CurrencyCloud');
-
 abstract class CurrencyCloudApi {
-  final String baseUrl = 'https://devapi.thecurrencycloud.com/v2';
+  AuthToken _authToken;
+  CurrencyCloudClient client;
 
+  CurrencyCloudApi(this._authToken) {
+    client = new CurrencyCloudClient(_authToken);
+  }
+
+  CurrencyCloudApi.withCurrencyCloudClient(this._authToken, this.client);
+}
+
+class CurrencyCloudClient {
+  final String baseUrl = 'https://devapi.thecurrencycloud.com/v2';
   AuthToken _authToken;
 
-  CurrencyCloudApi(this._authToken);
+  CurrencyCloudClient(this._authToken);
 
   /// Sets auth headers in provided [headers] and sends HTTP GET request to
   /// given methodUrl. Beware [headers] are being modified!
-  _get(String methodUrl, {Map<String, String> headers}) async {
+  get(String methodUrl, {Map<String, String> headers}) async {
     final String url = baseUrl + methodUrl;
 
     _setAuthHeader(headers);
@@ -19,13 +27,20 @@ abstract class CurrencyCloudApi {
     return await http.get(url, headers: headers);
   }
 
-  _post(String methodUrl, {Map body, Map<String, String> headers}) async {
+  Future<Map<String, String>> post(String methodUrl, {Map body, Map<String, String> headers}) async {
     final String url = baseUrl + methodUrl;
 
     _setAuthHeader(headers);
     body ??= {};
 
-    return await http.post(url, headers: headers, body: body);
+    var response = await http.post(url, headers: headers, body: body);
+    var responseBody = JSON.decode(response.body);
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw new CurrencyCloudException(response.statusCode, responseBody);
+    }
+
+    return responseBody;
   }
 
   /// Sets the 'X-Auth-Token' header in a given Map of [headers] if authToken has been set before. If [headers]
@@ -41,38 +56,24 @@ abstract class CurrencyCloudApi {
   }
 }
 
-class CurrencyCloud {
-  AuthToken authToken;
-
-  var authenticate;
-
-  CurrencyCloud() {
-    authToken = new AuthToken();
-    authenticate = new AuthenticateApi(authToken);
-  }
-}
-
-class CurrencyCloudRequest {
-  var url;
-
-  send() {
-    // _get or _post
-    // return parse JSON.decode(response.body);
-  }
-}
-
-class CurrencyCloudResponse {}
-
 class CurrencyCloudException implements Exception {
-  String name;
-  String msg;
-  String code;
+  int statusCode;
+  Map<String, String> body;
 
-  CurrencyCloudException(this.msg);
+  CurrencyCloudException(this.statusCode, this.body);
 }
 
 class AuthToken {
   String _value;
   String get value => _value;
   bool get isSet => _value != null;
+
+  reset() {
+    _value = null;
+  }
+
+  set value(String value) {
+    log.finest('Setting AuthToken to $value');
+    _value = value;
+  }
 }

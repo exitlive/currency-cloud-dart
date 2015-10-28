@@ -7,15 +7,15 @@ class AuthenticateApi extends CurrencyCloudApi {
   /// only be used after authentication.
   authenticate(String loginId, String apiKey) async {
     // Make sure we are in unauthenticated state
-    _authToken = null;
+    _authToken.reset;
 
     var url = '/authenticate/api';
     var body = {};
     body['login_id'] = loginId;
     body['api_key'] = apiKey;
 
-    await _post(url, body: body);
+    var response = await client.post(url, body: body);
 
-    _authToken = body['auth_token'];
+    _authToken.value = response['auth_token'];
   }
 }
