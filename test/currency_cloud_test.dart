@@ -5,17 +5,12 @@ library currency_cloud.test;
 
 import 'package:currency_cloud/currency_cloud.dart';
 import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
+
+import '../config/config.dart';
+
+part 'src/authenticate_api_test.dart';
 
 void main() {
-  group('A group of tests', () {
-    Awesome awesome;
-
-    setUp(() {
-      awesome = new Awesome();
-    });
-
-    test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
-    });
-  });
+  authenticate_api_test();
 }
