@@ -24,10 +24,11 @@ class CurrencyCloud {
   bool get isAuthenticated => _authToken.isSet;
 
   // Public viewable APIs according to CurrencyCloud Docs
-  AuthenticateApi authApi;
+  AuthenticateApi _authApi;
+  AuthenticateApi get authApi => _authApi;
 
   CurrencyCloud() {
     _authToken = new AuthToken();
-    authApi = new AuthenticateApi(_authToken);
+    _authApi = new AuthenticateApi(_authToken);
   }
 }
