@@ -16,6 +16,8 @@ part 'src/authenticate_api.dart';
 
 final Logger log = new Logger('CurrencyCloud');
 
+/// [CurrencyCloud] is the Class that provides the Interface for external calls. Using this library
+/// starts by getting a [CurrencyCloud] instance and calling the API methods one wants to use on that.
 class CurrencyCloud {
   AuthToken _authToken;
 
