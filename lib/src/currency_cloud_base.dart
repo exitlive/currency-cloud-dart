@@ -1,5 +1,8 @@
 part of currency_cloud;
 
+/// Base Class for all Currency Cloud APIs (according to Currency Cloud documented APIs)
+/// Every API has to get the same instance of AuthToken, which is the only shared
+/// information between all instances of [CurrencyCloudApi].
 abstract class CurrencyCloudApi {
   AuthToken _authToken;
   CurrencyCloudClient client;
@@ -11,6 +14,8 @@ abstract class CurrencyCloudApi {
   CurrencyCloudApi.withCurrencyCloudClient(this._authToken, this.client);
 }
 
+/// [CurrencyCloudClient] is used for communication with the CurrencyCloudService. It provides Request methods
+/// like [get] and [post] which handle the basic communication overheads like adding authentication headers.
 class CurrencyCloudClient {
   final String baseUrl = 'https://devapi.thecurrencycloud.com/v2';
   AuthToken _authToken;
