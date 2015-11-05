@@ -24,40 +24,56 @@ class CurrencyCloudClient {
 
   /// Sets auth headers in provided [headers] and sends HTTP GET request to
   /// given methodUrl. Beware [headers] are being modified!
-  get(String methodUrl, {Map<String, String> headers}) async {
+  Future<Map<String, String>> get(String methodUrl, {Map<String, String> headers}) async {
     final String url = baseUrl + methodUrl;
 
-    _setAuthHeader(headers);
+    headers = _setAuthHeader(headers);
 
-    return await http.get(url, headers: headers);
+    var not = _authToken.isSet ? '' : ' not';
+    log.finest('AuthToken is$not set');
+    log.finest('Sending get request with headers: ' + headers.toString());
+    var response = await http.get(url, headers: headers);
+
+    return _decodeResponse(response);
   }
 
-  Future<Map<String, String>> post(String methodUrl, {Map body, Map<String, String> headers}) async {
+  Future<Map<String, String>> post(String methodUrl, {Map<String, String> body, Map<String, String> headers}) async {
     final String url = baseUrl + methodUrl;
 
-    _setAuthHeader(headers);
+    headers = _setAuthHeader(headers);
     body ??= {};
 
+    log.finest('Sending post request with headers: ' + headers.toString());
     var response = await http.post(url, headers: headers, body: body);
-    var responseBody = JSON.decode(response.body);
+
+    return _decodeResponse(response);
+  }
+
+  Map<String, String> _decodeResponse(http.Response response) {
+    Map<String, String> responseBody = JSON.decode(response.body);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw new CurrencyCloudException(response.statusCode, responseBody);
+    }
+
+    if (responseBody.containsKey('error_code')) {
       throw new CurrencyCloudException(response.statusCode, responseBody);
     }
 
     return responseBody;
   }
 
-  /// Sets the 'X-Auth-Token' header in a given Map of [headers] if authToken has been set before. If [headers]
+  /// Returns a new copy of given [headers] with the 'X-Auth-Token' header set if authToken has been set before. If [headers]
   /// is not being provided returns a [headers] Map only containing of the set 'X-Auth-Token'.
-  _setAuthHeader([Map<String, String> headers]) {
+  Map<String, String> _setAuthHeader([Map<String, String> headers]) {
     headers ??= {};
+    var newHeaders = new Map.from(headers);
 
     if (_authToken.isSet) {
-      headers['X-Auth-Token'] = _authToken.value;
+      newHeaders['X-Auth-Token'] = _authToken.value;
     }
 
-    return headers;
+    return newHeaders;
   }
 }
 
