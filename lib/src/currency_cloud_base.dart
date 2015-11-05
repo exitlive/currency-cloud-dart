@@ -49,6 +49,8 @@ class CurrencyCloudClient {
     return _decodeResponse(response);
   }
 
+  /// Sets auth headers in provided [headers] and sends HTTP POST request to
+  /// given [methodUrl].
   Future<Map<String, String>> post(String methodUrl, {Map<String, String> body, Map<String, String> headers}) async {
     final String url = baseUri + methodUrl;
 
