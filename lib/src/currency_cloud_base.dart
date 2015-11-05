@@ -23,16 +23,28 @@ class CurrencyCloudClient {
   CurrencyCloudClient(this._authToken);
 
   /// Sets auth headers in provided [headers] and sends HTTP GET request to
-  /// given methodUrl. Beware [headers] are being modified!
-  Future<Map<String, String>> get(String methodUrl, {Map<String, String> headers}) async {
-    final String url = baseUrl + methodUrl;
+  /// given [uri] with [body] set as encoded uri parameters.
+  Future<Map<String, String>> get(String uri, {Map<String, String> body, Map<String, String> headers}) async {
+    uri = baseUri + uri;
 
     headers = _setAuthHeader(headers);
 
-    var not = _authToken.isSet ? '' : ' not';
-    log.finest('AuthToken is$not set');
-    log.finest('Sending get request with headers: ' + headers.toString());
-    var response = await http.get(url, headers: headers);
+    if(body != null) {
+
+      // list of the uri parameters to be set
+      var params = [];
+      for(var key in body.keys) {
+        params.add('$key=${body[key]}');
+      }
+
+      uri += '?';
+      uri += params.join('&');
+      uri = Uri.encodeFull(uri);
+    }
+
+    log.finest('Sending GET request with HEADERS: ' + headers.toString());
+    log.finest('to URL: ' + uri);
+    var response = await http.get(uri, headers: headers);
 
     return _decodeResponse(response);
   }

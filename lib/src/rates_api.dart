@@ -17,6 +17,6 @@ class RatesApi extends CurrencyCloudApi {
     if (onBehalfOf != null) body['on_behalf_of'] = onBehalfOf;
     if (conversionDate != null) body['conversion_date'] = conversionDate.toString();
 
-    return await client.get(url, headers: body);
+    return await client.get(url, body: body);
   }
 }
