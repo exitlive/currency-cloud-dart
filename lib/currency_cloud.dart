@@ -13,6 +13,7 @@ import 'dart:convert';
 
 part 'src/currency_cloud_base.dart';
 part 'src/authenticate_api.dart';
+part 'src/rates_api.dart';
 
 final Logger log = new Logger('CurrencyCloud');
 
@@ -26,9 +27,13 @@ class CurrencyCloud {
   // Public viewable APIs according to CurrencyCloud Docs
   AuthenticateApi _authApi;
   AuthenticateApi get authApi => _authApi;
+  RatesApi _ratesApi;
+  RatesApi get ratesApi => _ratesApi;
 
   CurrencyCloud() {
     _authToken = new AuthToken();
+
     _authApi = new AuthenticateApi(_authToken);
+    _ratesApi = new RatesApi(_authToken);
   }
 }
