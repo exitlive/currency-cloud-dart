@@ -17,7 +17,7 @@ abstract class CurrencyCloudApi {
 /// [CurrencyCloudClient] is used for communication with the CurrencyCloudService. It provides Request methods
 /// like [get] and [post] which handle the basic communication overheads like adding authentication headers.
 class CurrencyCloudClient {
-  final String baseUrl = 'https://devapi.thecurrencycloud.com/v2';
+  final String baseUri = 'https://devapi.thecurrencycloud.com/v2';
   AuthToken _authToken;
 
   CurrencyCloudClient(this._authToken);
@@ -50,7 +50,7 @@ class CurrencyCloudClient {
   }
 
   Future<Map<String, String>> post(String methodUrl, {Map<String, String> body, Map<String, String> headers}) async {
-    final String url = baseUrl + methodUrl;
+    final String url = baseUri + methodUrl;
 
     headers = _setAuthHeader(headers);
     body ??= {};
