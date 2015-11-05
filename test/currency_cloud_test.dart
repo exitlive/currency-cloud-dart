@@ -8,9 +8,12 @@ import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../config/config.dart';
+import 'src/mock_client.dart';
+import 'dart:async';
 
 part 'src/authenticate_api_test.dart';
 
 void main() {
   authenticate_api_test();
 }
+
