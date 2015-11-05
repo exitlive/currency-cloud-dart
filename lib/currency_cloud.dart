@@ -31,9 +31,19 @@ class CurrencyCloud {
   RatesApi get ratesApi => _ratesApi;
 
   CurrencyCloud() {
+    setupLogging();
+
     _authToken = new AuthToken();
 
     _authApi = new AuthenticateApi(_authToken);
     _ratesApi = new RatesApi(_authToken);
   }
+}
+
+setupLogging() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((LogRecord rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
+
 }
