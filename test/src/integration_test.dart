@@ -23,7 +23,7 @@ integration_test() {
       try {
         await cc.authApi.authenticate(loginId, apiKey);
         var result = await cc.ratesApi.detailed(
-            'EUR', 'GBP', 'buy', '40.00');//, conversionDate: new DateTime.now());
+            'EUR', 'GBP', 'buy', '40.00');
         print(result);
       } on CurrencyCloudException catch(e) {
         print('======= Got Exception ======= ');
