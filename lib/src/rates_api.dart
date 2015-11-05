@@ -3,8 +3,8 @@ part of currency_cloud;
 class RatesApi extends CurrencyCloudApi {
   RatesApi(authToken) : super(authToken);
 
-  Future<Map<String, String>> detailed(String buyCurrency, String sellCurrency, fixedSide, String amount,
-      {String onBehalfOf, DateTime conversionDate}) async {
+  Future<Map<String, String>> detailed(String buyCurrency, String sellCurrency, fixedSide, String amount
+      ) async {
 
     var url = '/rates/detailed';
 
@@ -13,9 +13,6 @@ class RatesApi extends CurrencyCloudApi {
     body['sell_currency'] = sellCurrency;
     body['fixed_side'] = fixedSide;
     body['amount'] = amount;
-
-    if (onBehalfOf != null) body['on_behalf_of'] = onBehalfOf;
-    if (conversionDate != null) body['conversion_date'] = conversionDate.toString();
 
     return await client.get(url, body: body);
   }
