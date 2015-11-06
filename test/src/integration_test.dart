@@ -20,15 +20,18 @@ integration_test() {
     });
 
     test('ratesApi.detailed() call should return a quote', () async {
-      try {
-        await cc.authApi.authenticate(loginId, apiKey);
-        var result = await cc.ratesApi.detailed(
-            'EUR', 'GBP', 'buy', '40.00');
-        print(result);
-      } on CurrencyCloudException catch(e) {
-        print('======= Got Exception ======= ');
-        print(e.body);
-      }
+      var buyCurrency = 'EUR';
+      var sellCurrency = 'GBP';
+      var fixed_side = 'buy';
+      var amount = '40.00';
+
+      await cc.authApi.authenticate(loginId, apiKey);
+      var result = await cc.ratesApi.detailed(buyCurrency, sellCurrency, fixed_side, amount);
+
+      expect(result['client_buy_currency'], buyCurrency);
+      expect(result['client_sell_currency'], sellCurrency);
+      expect(result['fixed_side'], fixed_side);
+      expect(result['client_buy_amount'], amount);
     });
   });
 }
