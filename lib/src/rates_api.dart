@@ -3,9 +3,7 @@ part of currency_cloud;
 class RatesApi extends CurrencyCloudApi {
   RatesApi(authToken) : super(authToken);
 
-  Future<Map<String, String>> detailed(String buyCurrency, String sellCurrency, fixedSide, String amount
-      ) async {
-
+  Future<Map<String, String>> detailed(String buyCurrency, String sellCurrency, fixedSide, String amount) async {
     var url = '/rates/detailed';
 
     var body = new Map<String, String>();
