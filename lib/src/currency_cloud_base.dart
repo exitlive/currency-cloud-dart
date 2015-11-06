@@ -29,11 +29,10 @@ class CurrencyCloudClient {
 
     headers = _setAuthHeader(headers);
 
-    if(body != null) {
-
+    if (body != null) {
       // list of the uri parameters to be set
       var params = [];
-      for(var key in body.keys) {
+      for (var key in body.keys) {
         params.add('$key=${body[key]}');
       }
 
