@@ -11,12 +11,13 @@ import 'package:logging/logging.dart';
 
 part 'src/authenticate_api_test.dart';
 part 'src/rates_api_test.dart';
+part 'src/conversion_api_test.dart';
 part 'src/integration_test.dart';
 
 void main() {
   authenticate_api_test();
   rates_api_test();
+  conversion_api_test();
 
   integration_test();
 }
-

@@ -112,3 +112,5 @@ class AuthToken {
     _value = value;
   }
 }
+
+enum FixedSide { buy, sell }
