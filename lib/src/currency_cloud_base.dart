@@ -56,7 +56,9 @@ class CurrencyCloudClient {
     headers = _setAuthHeader(headers);
     body ??= {};
 
-    log.finest('Sending post request with headers: ' + headers.toString());
+    log.finest('Sending post request to url: $url');
+    log.finest('headers: ${headers.toString()}');
+    log.finest('body: ${body.toString()}');
     var response = await http.post(url, headers: headers, body: body);
 
     return _decodeResponse(response);
@@ -95,6 +97,8 @@ class CurrencyCloudException implements Exception {
   Map<String, String> body;
 
   CurrencyCloudException(this.statusCode, this.body);
+
+  toString() => 'CurrencyCloudException(${statusCode}): ${body.toString()}';
 }
 
 class AuthToken {
