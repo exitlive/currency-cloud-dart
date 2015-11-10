@@ -40,23 +40,22 @@ main() {
       expect(result['client_buy_amount'], amount);
     });
 
-    test('conversionApi.create() call should return a quote', () async {
+    test('conversionApi.create() call should return a ', () async {
       var buyCurrency = 'EUR';
       var sellCurrency = 'GBP';
       var fixed_side = FixedSide.buy;
-      var amount = '40.00';
+      // TODO the amount of '40.00' seems to be too low. Find out if this is just a Demo problem
+      var amount = '4000.00';
       var reason = 'whatever';
       var termAgreement = true;
 
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.conversionApi.create(buyCurrency, sellCurrency, fixed_side, amount, reason, termAgreement);
 
-      expect(result['client_buy_currency'], buyCurrency);
-      expect(result['client_sell_currency'], sellCurrency);
+      expect(result['buy_currency'], buyCurrency);
+      expect(result['sell_currency'], sellCurrency);
       expect(result['fixed_side'], fixed_side.toString().split('.').last);
       expect(result['client_buy_amount'], amount);
-      expect(result['reason'], reason);
-      expect(result['term_agreement'], termAgreement.toString());
     });
   });
 }
