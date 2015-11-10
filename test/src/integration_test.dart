@@ -7,7 +7,6 @@ import 'package:currency_cloud/currency_cloud.dart';
 import '../../config/config.dart';
 
 import 'package:logging/logging.dart';
-import 'package:money/money.dart';
 
 main() {
   group('integration tests', () {
@@ -15,6 +14,13 @@ main() {
     var loginId;
     var apiKey;
     var log;
+
+    var bankAccountHolderName;
+    var bankCountry;
+    var currency;
+    var name;
+    var iban;
+    var bicSwift;
 
     setUp(() {
       setupLogging();
@@ -24,6 +30,13 @@ main() {
       apiKey = Config.apiKey;
 
       cc = new CurrencyCloud();
+
+      bankAccountHolderName = 'Hansi';
+      bankCountry = 'DE';
+      currency = new Currency('EUR');
+      name = 'Secret Funds';
+      iban = 'DE89370400440532013000';
+      bicSwift = 'COBADEFF';
     });
 
     test('authenticate call should set authToken', () async {
@@ -67,17 +80,22 @@ main() {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
       log.finest(result);
-    test('beneficiariesApi.create()', () async {
-      var bankAccountHolderName = 'Hansi';
-      var bankCountry = 'DE';
-      var currency = new Currency('EUR');
-      var name = 'Secret Funds';
-      var iban = 'DE89370400440532013000';
-      var bicSwift = 'COBADEFF';
 
+    test('beneficiariesApi.create()', () async {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.beneficiariesApi
           .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
+    });
+    test('paymentsApi.create()', () async {
+      var money = new Money(5000, new Currency('EUR'));
+      var reason = 'SomeReason';
+      var reference = 'INVOICE 12348';
+
+      await cc.authApi.authenticate(loginId, apiKey);
+      var beneficiary = await cc.beneficiariesApi
+          .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
+      var result = await cc.paymentsApi.create(money, beneficiary['id'], reason, reference);
+      log.finest(result);
     });
   });
 }
