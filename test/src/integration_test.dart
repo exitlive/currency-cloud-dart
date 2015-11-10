@@ -1,6 +1,12 @@
-part of currency_cloud.test;
+@Skip("Don't run integration tests by default")
+library currency_cloud.integration_test;
 
-integration_test() {
+import 'package:test/test.dart';
+
+import 'package:currency_cloud/currency_cloud.dart';
+import '../../config/config.dart';
+
+main() {
   group('integration tests', () {
     CurrencyCloud cc;
     var loginId;
@@ -52,5 +58,5 @@ integration_test() {
       expect(result['reason'], reason);
       expect(result['term_agreement'], termAgreement.toString());
     });
-  }, skip: "Don't run integration tests by default");
+  });
 }

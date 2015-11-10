@@ -1,6 +1,14 @@
-part of currency_cloud.test;
+library currency_cloud.conversion_api_test;
 
-conversion_api_test() {
+import 'dart:async';
+
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
+
+import 'package:currency_cloud/currency_cloud.dart';
+import 'mock_client.dart';
+
+main() {
   group(('conversion api test'), () {
     ConversionsApi conversionApi;
     MockClient mockClient;

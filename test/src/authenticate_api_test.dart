@@ -1,6 +1,14 @@
-part of currency_cloud.test;
+library currency_cloud.authenticate_api_test;
 
-authenticate_api_test() {
+import 'dart:async';
+
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
+
+import 'package:currency_cloud/currency_cloud.dart';
+import 'mock_client.dart';
+
+main() {
   group('authenticate', () {
     var mockClient;
     var authToken;
