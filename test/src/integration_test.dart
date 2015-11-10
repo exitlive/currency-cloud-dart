@@ -6,13 +6,19 @@ import 'package:test/test.dart';
 import 'package:currency_cloud/currency_cloud.dart';
 import '../../config/config.dart';
 
+import 'package:logging/logging.dart';
+
 main() {
   group('integration tests', () {
     CurrencyCloud cc;
     var loginId;
     var apiKey;
+    var log;
 
     setUp(() {
+      setupLogging();
+      log = new Logger('IntegrationTests');
+
       loginId = Config.loginId;
       apiKey = Config.apiKey;
 
@@ -56,6 +62,10 @@ main() {
       expect(result['sell_currency'], sellCurrency);
       expect(result['fixed_side'], fixed_side.toString().split('.').last);
       expect(result['client_buy_amount'], amount);
+    test('referenceDataApi.beneficiaryRequiredDetails() should return something without Errors', () async {
+      await cc.authApi.authenticate(loginId, apiKey);
+      var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
+      log.finest(result);
     });
   });
 }
