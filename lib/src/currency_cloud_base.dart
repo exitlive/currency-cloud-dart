@@ -117,3 +117,4 @@ class AuthToken {
 }
 
 enum FixedSide { buy, sell }
+enum PaymentType { regular, priority }

@@ -35,6 +35,7 @@ main() {
       body['beneficiary_id'] = beneficiaryId;
       body['reason'] = reason;
       body['reference'] = reference;
+      body['payment_type'] = 'regular';
 
       var answer = {'custom': 'answer'};
       when(mockClient.post(any, body: any)).thenReturn(new Future.value(answer));
