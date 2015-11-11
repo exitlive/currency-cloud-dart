@@ -96,12 +96,22 @@ main() {
       var money = new Money(5000, new Currency('EUR'));
       var reason = 'SomeReason';
       var reference = 'INVOICE 12348';
+      var paymentType = PaymentType.regular;
+
+      var buyCurrency = 'EUR';
+      var sellCurrency = 'EUR';
+      var fixedSide = FixedSide.buy;
+      var amount = money.amountAsString;
+      var termAgreement = true;
 
       await cc.authApi.authenticate(loginId, apiKey);
+      var conversion =
+          await cc.conversionApi.create(buyCurrency, sellCurrency, fixedSide, amount, reason, termAgreement);
       var beneficiary = await cc.beneficiariesApi
           .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
-      var result = await cc.paymentsApi.create(money, beneficiary['id'], reason, reference);
+      var result = await cc.paymentsApi.create(money, beneficiary['id'], reason, reference,
+          conversionId: conversion['id'], paymentType: paymentType);
       log.finest(result);
-    });
+    }, skip: skip);
   });
 }
