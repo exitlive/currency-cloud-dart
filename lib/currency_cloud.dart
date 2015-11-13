@@ -13,12 +13,15 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:money/money.dart';
 
+export 'package:money/money.dart';
+
 part 'src/currency_cloud_base.dart';
 part 'src/authenticate_api.dart';
 part 'src/rates_api.dart';
 part 'src/conversion_api.dart';
 part 'src/reference_data_api.dart';
 part 'src/beneficiaries_api.dart';
+part 'src/payments_api.dart';
 
 final Logger log = new Logger('CurrencyCloud');
 
@@ -45,16 +48,21 @@ class CurrencyCloud {
   BeneficiariesApi _beneficiariesApi;
   BeneficiariesApi get beneficiariesApi => _beneficiariesApi;
 
+  PaymentsApi _paymentsApi;
+  PaymentsApi get paymentsApi => _paymentsApi;
+
   CurrencyCloud() {
     setupLogging();
 
     _authToken = new AuthToken();
 
+    // Initialize all APIs
     _authApi = new AuthenticateApi(_authToken);
     _ratesApi = new RatesApi(_authToken);
     _conversionApi = new ConversionsApi(_authToken);
     _referenceDataApi = new ReferenceDataApi(_authToken);
     _beneficiariesApi = new BeneficiariesApi(_authToken);
+    _paymentsApi = new PaymentsApi(_authToken);
   }
 }
 

@@ -7,14 +7,21 @@ import 'package:currency_cloud/currency_cloud.dart';
 import '../../config/config.dart';
 
 import 'package:logging/logging.dart';
-import 'package:money/money.dart';
 
 main() {
   group('integration tests', () {
     CurrencyCloud cc;
     var loginId;
     var apiKey;
+    var skip;
     var log;
+
+    var bankAccountHolderName;
+    var bankCountry;
+    var currency;
+    var name;
+    var iban;
+    var bicSwift;
 
     setUp(() {
       setupLogging();
@@ -24,13 +31,21 @@ main() {
       apiKey = Config.apiKey;
 
       cc = new CurrencyCloud();
+
+      bankAccountHolderName = 'Hansi';
+      bankCountry = 'DE';
+      currency = new Currency('EUR');
+      name = 'Secret Funds';
+      iban = 'DE89370400440532013000';
+      bicSwift = 'COBADEFF';
     });
 
+    skip = 'some reason';
     test('authenticate call should set authToken', () async {
       expect(cc.isAuthenticated, false);
       await cc.authApi.authenticate(loginId, apiKey);
       expect(cc.isAuthenticated, true);
-    });
+    }, skip: skip);
 
     test('ratesApi.detailed() call should return a quote', () async {
       var buyCurrency = 'EUR';
@@ -45,7 +60,7 @@ main() {
       expect(result['client_sell_currency'], sellCurrency);
       expect(result['fixed_side'], fixed_side);
       expect(result['client_buy_amount'], amount);
-    });
+    }, skip: skip);
 
     test('conversionApi.create() call should return a ', () async {
       var buyCurrency = 'EUR';
@@ -63,23 +78,40 @@ main() {
       expect(result['sell_currency'], sellCurrency);
       expect(result['fixed_side'], fixed_side.toString().split('.').last);
       expect(result['client_buy_amount'], amount);
-    });
+    }, skip: skip);
+
     test('referenceDataApi.beneficiaryRequiredDetails() should return something without Errors', () async {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
       log.finest(result);
-    });
-    test('beneficiariesApi.create()', () async {
-      var bankAccountHolderName = 'Hansi';
-      var bankCountry = 'DE';
-      var currency = new Currency('EUR');
-      var name = 'Secret Funds';
-      var iban = 'DE89370400440532013000';
-      var bicSwift = 'COBADEFF';
+    }, skip: skip);
 
+    test('beneficiariesApi.create()', () async {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.beneficiariesApi
           .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
-    });
+    }, skip: skip);
+
+    test('paymentsApi.create()', () async {
+      var money = new Money(5000, new Currency('EUR'));
+      var reason = 'SomeReason';
+      var reference = 'INVOICE 12348';
+      var paymentType = PaymentType.regular;
+
+      var buyCurrency = 'EUR';
+      var sellCurrency = 'EUR';
+      var fixedSide = FixedSide.buy;
+      var amount = money.amountAsString;
+      var termAgreement = true;
+
+      await cc.authApi.authenticate(loginId, apiKey);
+      var conversion =
+          await cc.conversionApi.create(buyCurrency, sellCurrency, fixedSide, amount, reason, termAgreement);
+      var beneficiary = await cc.beneficiariesApi
+          .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
+      var result = await cc.paymentsApi.create(money, beneficiary['id'], reason, reference,
+          conversionId: conversion['id'], paymentType: paymentType);
+      log.finest(result);
+    }, skip: skip);
   });
 }
