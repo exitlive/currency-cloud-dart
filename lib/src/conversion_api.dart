@@ -3,6 +3,7 @@ part of currency_cloud;
 class ConversionsApi extends CurrencyCloudApi {
   ConversionsApi(authToken) : super(authToken);
 
+  // TODO use package:Money instead of Strings
   Future<Map<String, String>> create(String buyCurrency, String sellCurrency, FixedSide fixedSide, String amount,
       String reason, bool termAgreement) async {
     var url = '/conversions/create';

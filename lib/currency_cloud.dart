@@ -6,16 +6,19 @@
 /// Dart library for the CurrencyCloud service
 library currency_cloud;
 
-import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
+import 'package:money/money.dart';
 
 part 'src/currency_cloud_base.dart';
 part 'src/authenticate_api.dart';
 part 'src/rates_api.dart';
 part 'src/conversion_api.dart';
 part 'src/reference_data_api.dart';
+part 'src/beneficiaries_api.dart';
 
 final Logger log = new Logger('CurrencyCloud');
 
@@ -39,6 +42,9 @@ class CurrencyCloud {
   ReferenceDataApi _referenceDataApi;
   ReferenceDataApi get referenceDataApi => _referenceDataApi;
 
+  BeneficiariesApi _beneficiariesApi;
+  BeneficiariesApi get beneficiariesApi => _beneficiariesApi;
+
   CurrencyCloud() {
     setupLogging();
 
@@ -48,6 +54,7 @@ class CurrencyCloud {
     _ratesApi = new RatesApi(_authToken);
     _conversionApi = new ConversionsApi(_authToken);
     _referenceDataApi = new ReferenceDataApi(_authToken);
+    _beneficiariesApi = new BeneficiariesApi(_authToken);
   }
 }
 

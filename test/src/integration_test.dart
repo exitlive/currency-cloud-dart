@@ -7,6 +7,7 @@ import 'package:currency_cloud/currency_cloud.dart';
 import '../../config/config.dart';
 
 import 'package:logging/logging.dart';
+import 'package:money/money.dart';
 
 main() {
   group('integration tests', () {
@@ -67,6 +68,18 @@ main() {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
       log.finest(result);
+    });
+    test('beneficiariesApi.create()', () async {
+      var bankAccountHolderName = 'Hansi';
+      var bankCountry = 'DE';
+      var currency = new Currency('EUR');
+      var name = 'Secret Funds';
+      var iban = 'DE89370400440532013000';
+      var bicSwift = 'COBADEFF';
+
+      await cc.authApi.authenticate(loginId, apiKey);
+      var result = await cc.beneficiariesApi
+          .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
     });
   });
 }
