@@ -1,34 +1,41 @@
-part of currency_cloud.test;
+library currency_cloud.authenticate_api_test;
 
-authenticate_api_test() {
-  group('unit tests', () {
-    group('authenticate', () {
-      var currencyCloudMock;
+import 'dart:async';
 
-      setUp(() {
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 
-      });
+import 'package:currency_cloud/currency_cloud.dart';
+import 'mock_client.dart';
+
+main() {
+  group('authenticate', () {
+    var mockClient;
+    var authToken;
+    AuthenticateApi authenticateApi;
+
+    setUp(() {
+      mockClient = new MockClient();
+      authToken = new AuthToken();
+      authenticateApi = new AuthenticateApi(authToken);
+      authenticateApi.client = mockClient;
     });
-  });
 
-  group('integration tests', () {
-    group('authenticate', () {
-      var cc;
-      var loginId;
-      var apiKey;
+    test('call to authenticate should do post call with correct body', () async {
+      var authTokenString = 'funnyAuthTokenString';
+      var loginId = 'someLoginId';
+      var apiKey = 'someApiKey';
+      var url = '/authenticate/api';
+      authToken.reset();
 
-      setUp(() {
-        loginId = Config.loginId;
-        apiKey = Config.apiKey;
+      var body = {};
+      body['login_id'] = loginId;
+      body['api_key'] = apiKey;
 
-        cc = new CurrencyCloud();
-      });
-
-      test('authenticate.api integration test, should set authToken', () async {
-        expect(cc.isAuthenticated, false);
-        await cc.authApi.authenticate(loginId, apiKey);
-        expect(cc.isAuthenticated, true);
-      });
+      when(mockClient.post(url, body: body)).thenReturn(new Future.value({'auth_token': authTokenString}));
+      await authenticateApi.authenticate(loginId, apiKey);
+      verify(mockClient.post(url, body: body)).called(1);
+      expect(authToken.value, authTokenString);
     });
   });
 }

@@ -13,19 +13,40 @@ import 'dart:convert';
 
 part 'src/currency_cloud_base.dart';
 part 'src/authenticate_api.dart';
+part 'src/rates_api.dart';
+part 'src/conversion_api.dart';
 
 final Logger log = new Logger('CurrencyCloud');
 
+/// [CurrencyCloud] is the Class that provides the Interface for external calls. Using this library
+/// starts by getting a [CurrencyCloud] instance and calling the API methods one wants to use on that.
 class CurrencyCloud {
   AuthToken _authToken;
 
   bool get isAuthenticated => _authToken.isSet;
 
   // Public viewable APIs according to CurrencyCloud Docs
-  AuthenticateApi authApi;
+  AuthenticateApi _authApi;
+  AuthenticateApi get authApi => _authApi;
+  RatesApi _ratesApi;
+  RatesApi get ratesApi => _ratesApi;
+  ConversionsApi _conversionApi;
+  ConversionsApi get conversionApi => _conversionApi;
 
   CurrencyCloud() {
+    setupLogging();
+
     _authToken = new AuthToken();
-    authApi = new AuthenticateApi(_authToken);
+
+    _authApi = new AuthenticateApi(_authToken);
+    _ratesApi = new RatesApi(_authToken);
+    _conversionApi = new ConversionsApi(_authToken);
   }
+}
+
+setupLogging() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((LogRecord rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
 }
