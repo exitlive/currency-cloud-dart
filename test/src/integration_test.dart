@@ -68,6 +68,7 @@ main() {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
       log.finest(result);
+    });
     test('beneficiariesApi.create()', () async {
       var bankAccountHolderName = 'Hansi';
       var bankCountry = 'DE';
