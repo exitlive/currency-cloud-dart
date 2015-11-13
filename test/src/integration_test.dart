@@ -62,6 +62,7 @@ main() {
       expect(result['sell_currency'], sellCurrency);
       expect(result['fixed_side'], fixed_side.toString().split('.').last);
       expect(result['client_buy_amount'], amount);
+    });
     test('referenceDataApi.beneficiaryRequiredDetails() should return something without Errors', () async {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
