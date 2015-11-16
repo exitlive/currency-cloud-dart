@@ -28,9 +28,7 @@ main() {
       var url = '/authenticate/api';
       authToken.reset();
 
-      var body = {};
-      body['login_id'] = loginId;
-      body['api_key'] = apiKey;
+      var body = {'login_id': loginId, 'api_key': apiKey};
 
       when(mockClient.post(url, body: body)).thenReturn(new Future.value({'auth_token': authTokenString}));
       await authenticateApi.authenticate(loginId, apiKey);

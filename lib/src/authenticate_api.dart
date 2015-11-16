@@ -10,9 +10,7 @@ class AuthenticateApi extends CurrencyCloudApi {
     _authToken.reset;
 
     var url = '/authenticate/api';
-    var body = {};
-    body['login_id'] = loginId;
-    body['api_key'] = apiKey;
+    var body = {'login_id': loginId, 'api_key': apiKey,};
 
     var response = await client.post(url, body: body);
 

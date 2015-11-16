@@ -4,7 +4,7 @@ library currency_cloud.integration_test;
 import 'package:test/test.dart';
 
 import 'package:currency_cloud/currency_cloud.dart';
-import '../../config/config.dart';
+import '../config/config.dart';
 
 import 'package:logging/logging.dart';
 
@@ -13,7 +13,6 @@ main() {
     CurrencyCloud cc;
     var loginId;
     var apiKey;
-    var skip;
     var log;
 
     var bankAccountHolderName;
@@ -40,12 +39,11 @@ main() {
       bicSwift = 'COBADEFF';
     });
 
-    skip = 'some reason';
     test('authenticate call should set authToken', () async {
       expect(cc.isAuthenticated, false);
       await cc.authApi.authenticate(loginId, apiKey);
       expect(cc.isAuthenticated, true);
-    }, skip: skip);
+    });
 
     test('ratesApi.detailed() call should return a quote', () async {
       var buyCurrency = 'EUR';
@@ -60,7 +58,7 @@ main() {
       expect(result['client_sell_currency'], sellCurrency);
       expect(result['fixed_side'], fixed_side);
       expect(result['client_buy_amount'], amount);
-    }, skip: skip);
+    });
 
     test('conversionApi.create() call should return a ', () async {
       var buyCurrency = 'EUR';
@@ -78,19 +76,19 @@ main() {
       expect(result['sell_currency'], sellCurrency);
       expect(result['fixed_side'], fixed_side.toString().split('.').last);
       expect(result['client_buy_amount'], amount);
-    }, skip: skip);
+    });
 
     test('referenceDataApi.beneficiaryRequiredDetails() should return something without Errors', () async {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
       log.finest(result);
-    }, skip: skip);
+    });
 
     test('beneficiariesApi.create()', () async {
       await cc.authApi.authenticate(loginId, apiKey);
       var result = await cc.beneficiariesApi
           .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
-    }, skip: skip);
+    });
 
     test('paymentsApi.create()', () async {
       var money = new Money(5000, new Currency('EUR'));
@@ -112,6 +110,13 @@ main() {
       var result = await cc.paymentsApi.create(money, beneficiary['id'], reason, reference,
           conversionId: conversion['id'], paymentType: paymentType);
       log.finest(result);
-    }, skip: skip);
+    });
+  });
+}
+
+setupLogging() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((LogRecord rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 }

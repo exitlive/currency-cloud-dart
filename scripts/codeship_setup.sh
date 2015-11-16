@@ -3,7 +3,7 @@ wget http://storage.googleapis.com/dart-archive/channels/stable/release/latest/s
 unzip -o dartsdk-linux-x64-release.zip -d ~
 ~/dart-sdk/bin/pub get
 
-cat > config/config.dart <<EOF
+cat > test/config/config.dart <<EOF
 abstract class Config {
   static final loginId = '${LOGIN_ID}';
   static final apiKey = '${API_KEY}';
