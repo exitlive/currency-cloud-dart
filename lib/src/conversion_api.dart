@@ -8,13 +8,14 @@ class ConversionsApi extends CurrencyCloudApi {
       String reason, bool termAgreement) async {
     var url = '/conversions/create';
 
-    var body = new Map<String, String>();
-    body['buy_currency'] = buyCurrency;
-    body['sell_currency'] = sellCurrency;
-    body['fixed_side'] = fixedSide.toString().split('.').last;
-    body['amount'] = amount;
-    body['reason'] = reason;
-    body['term_agreement'] = termAgreement.toString();
+    var body = {
+      'buy_currency': buyCurrency,
+      'sell_currency': sellCurrency,
+      'fixed_side': fixedSide.toString().split('.').last,
+      'amount': amount,
+      'reason': reason,
+      'term_agreement': termAgreement.toString()
+    };
 
     return await client.post(url, body: body);
   }

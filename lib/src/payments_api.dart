@@ -8,12 +8,13 @@ class PaymentsApi extends CurrencyCloudApi {
       {String conversionId, PaymentType paymentType}) {
     var uri = '/payments/create';
 
-    var body = {};
-    body['amount'] = money.amountAsString;
-    body['currency'] = money.currency.code;
-    body['beneficiary_id'] = beneficiaryId;
-    body['reason'] = reason;
-    body['reference'] = reference;
+    var body = {
+      'amount': money.amountAsString,
+      'currency': money.currency.code,
+      'beneficiary_id': beneficiaryId,
+      'reason': reason,
+      'reference': reference,
+    };
 
     if (conversionId != null) body['conversion_id'] = conversionId;
     body['payment_type'] = paymentType?.toString()?.split('.')?.last ?? 'regular';

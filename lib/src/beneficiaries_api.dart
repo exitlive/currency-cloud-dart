@@ -7,13 +7,14 @@ class BeneficiariesApi extends CurrencyCloudApi {
       {String iban, String, bicSwift}) {
     var uri = '/beneficiaries/create';
 
-    var body = {};
-    body['bank_account_holder_name'] = bankAccountHolderName;
-    body['bank_country'] = bankCountry;
-    body['currency'] = currency.code;
-    body['name'] = name;
-    body['iban'] = iban;
-    body['bic_swift'] = bicSwift;
+    var body = {
+      'bank_account_holder_name': bankAccountHolderName,
+      'bank_country': bankCountry,
+      'currency': currency.code,
+      'name': name,
+      'iban': iban,
+      'bic_swift': bicSwift,
+    };
 
     return client.post(uri, body: body);
   }
