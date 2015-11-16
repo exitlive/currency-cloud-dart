@@ -52,8 +52,6 @@ class CurrencyCloud {
   PaymentsApi get paymentsApi => _paymentsApi;
 
   CurrencyCloud() {
-    setupLogging();
-
     _authToken = new AuthToken();
 
     // Initialize all APIs
@@ -64,11 +62,4 @@ class CurrencyCloud {
     _beneficiariesApi = new BeneficiariesApi(_authToken);
     _paymentsApi = new PaymentsApi(_authToken);
   }
-}
-
-setupLogging() {
-  Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen((LogRecord rec) {
-    print('${rec.level.name}: ${rec.time}: ${rec.message}');
-  });
 }
