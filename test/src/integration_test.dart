@@ -4,7 +4,7 @@ library currency_cloud.integration_test;
 import 'package:test/test.dart';
 
 import 'package:currency_cloud/currency_cloud.dart';
-import '../../config/config.dart';
+import '../config/config.dart';
 
 import 'package:logging/logging.dart';
 
