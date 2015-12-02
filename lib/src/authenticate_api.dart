@@ -16,4 +16,12 @@ class AuthenticateApi extends CurrencyCloudApi {
 
     _authToken.value = response['auth_token'];
   }
+
+  /// Closes authenticated Session
+  closeSession() async {
+    var url = '/authenticate/close_session';
+
+    await client.post(url);
+    _authToken.reset;
+  }
 }
