@@ -72,6 +72,8 @@ class CurrencyCloudClient {
     }
 
     if (responseBody.containsKey('error_code')) {
+      if (responseBody['error_code'] == 'auth_failed')
+        throw new AuthException(response.statusCode, responseBody);
       throw new CurrencyCloudException(response.statusCode, responseBody);
     }
 
@@ -99,6 +101,10 @@ class CurrencyCloudException implements Exception {
   CurrencyCloudException(this.statusCode, this.body);
 
   toString() => 'CurrencyCloudException(${statusCode}): ${body.toString()}';
+}
+
+class AuthException extends CurrencyCloudException {
+  AuthException(int statusCode, Map<String, String> body) : super(statusCode, body);
 }
 
 class AuthToken {
