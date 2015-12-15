@@ -1,11 +1,17 @@
 part of currency_cloud;
 
 class AuthenticateApi extends CurrencyCloudApi {
-  AuthenticateApi(authToken) : super(authToken);
+  String loginId, apiKey;
+
+  AuthenticateApi(this.loginId, this.apiKey, authToken) : super(authToken);
 
   /// Authenticates this [CurrencyCloud] using given [loginId] and [apiKey]. This [CurrencyCloud] instance can
   /// only be used after authentication.
-  authenticate(String loginId, String apiKey) async {
+  authenticate() async {
+    // Save credentials for relogin in case our [AuthToken] expires
+    this.loginId = loginId;
+    this.apiKey = apiKey;
+
     // Make sure we are in unauthenticated state
     _authToken.reset;
 

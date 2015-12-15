@@ -51,11 +51,11 @@ class CurrencyCloud {
   PaymentsApi _paymentsApi;
   PaymentsApi get paymentsApi => _paymentsApi;
 
-  CurrencyCloud() {
+  CurrencyCloud(String loginId, String apiKey) {
     _authToken = new AuthToken();
 
     // Initialize all APIs
-    _authApi = new AuthenticateApi(_authToken);
+    _authApi = new AuthenticateApi(loginId, apiKey, _authToken);
     _ratesApi = new RatesApi(_authToken);
     _conversionApi = new ConversionsApi(_authToken);
     _referenceDataApi = new ReferenceDataApi(_authToken);

@@ -13,25 +13,27 @@ main() {
     var mockClient;
     var authToken;
     AuthenticateApi authenticateApi;
+    var loginId;
+    var apiKey;
 
     setUp(() {
       mockClient = new MockClient();
       authToken = new AuthToken();
-      authenticateApi = new AuthenticateApi(authToken);
+      loginId = 'someLoginId';
+      apiKey = 'someApiKey';
+      authenticateApi = new AuthenticateApi(loginId, apiKey, authToken);
       authenticateApi.client = mockClient;
     });
 
     test('call to authenticate should do post call with correct body', () async {
       var authTokenString = 'funnyAuthTokenString';
-      var loginId = 'someLoginId';
-      var apiKey = 'someApiKey';
       var url = '/authenticate/api';
       authToken.reset();
 
       var body = {'login_id': loginId, 'api_key': apiKey};
 
       when(mockClient.post(url, body: body)).thenReturn(new Future.value({'auth_token': authTokenString}));
-      await authenticateApi.authenticate(loginId, apiKey);
+      await authenticateApi.authenticate();
       verify(mockClient.post(url, body: body)).called(1);
       expect(authToken.value, authTokenString);
     });
