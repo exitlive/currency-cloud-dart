@@ -30,7 +30,7 @@ main() {
       beneficiariesApi.client = mockClient;
     });
 
-    test('call with minimum with minimum amount of parameters should cause according post call', () async {
+    test('call with minimum amount of parameters should cause according post call', () async {
       var answer = {'much_answer': 'very_custom'};
       when(mockClient.post(any, body: any)).thenReturn(new Future.value(answer));
       var result = await beneficiariesApi.create(bankAccountHolderName, bankCountry, currency, name,
