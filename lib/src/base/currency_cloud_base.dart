@@ -18,6 +18,9 @@ abstract class CurrencyCloudApi {
 /// like [get] and [post] which handle the basic communication overheads like adding authentication headers.
 class CurrencyCloudClient {
   final String baseUri = 'https://devapi.thecurrencycloud.com/v2';
+
+  String loginId, apiKey;
+
   AuthToken _authToken;
 
   CurrencyCloudClient(this._authToken);
@@ -62,6 +65,25 @@ class CurrencyCloudClient {
     var response = await http.post(url, headers: headers, body: body);
 
     return _decodeResponse(response);
+  }
+
+  /// Authenticates this [CurrencyCloud] using given [loginId] and [apiKey]. This [CurrencyCloud] instance can
+  /// only be used after authentication.
+  authenticate() async {
+    var url = '/authenticate/api';
+    var body = {'login_id': loginId, 'api_key': apiKey,};
+
+    var response = await post(url, body: body);
+
+    _authToken.value = response['auth_token'];
+  }
+
+  /// Closes authenticated Session
+  closeSession() async {
+    var url = '/authenticate/close_session';
+
+    await post(url);
+    _authToken.reset;
   }
 
   Map<String, String> _decodeResponse(http.Response response) {
