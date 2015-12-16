@@ -15,13 +15,13 @@ import 'package:money/money.dart';
 
 export 'package:money/money.dart';
 
-part 'src/currency_cloud_base.dart';
-part 'src/authenticate_api.dart';
-part 'src/rates_api.dart';
-part 'src/conversion_api.dart';
-part 'src/reference_data_api.dart';
-part 'src/beneficiaries_api.dart';
-part 'src/payments_api.dart';
+part 'package:currency_cloud/src/base/currency_cloud_base.dart';
+part 'package:currency_cloud/src/api/authenticate.dart';
+part 'package:currency_cloud/src/api/rates.dart';
+part 'package:currency_cloud/src/api/conversion.dart';
+part 'package:currency_cloud/src/api/reference_data.dart';
+part 'package:currency_cloud/src/api/beneficiaries.dart';
+part 'package:currency_cloud/src/api/payments.dart';
 
 final Logger log = new Logger('CurrencyCloud');
 
