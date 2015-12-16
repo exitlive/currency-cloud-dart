@@ -4,14 +4,9 @@ part of currency_cloud;
 /// Every API has to get the same instance of AuthToken, which is the only shared
 /// information between all instances of [CurrencyCloudApi].
 abstract class CurrencyCloudApi {
-  AuthToken _authToken;
   CurrencyCloudClient client;
 
-  CurrencyCloudApi(this._authToken) {
-    client = new CurrencyCloudClient(_authToken);
-  }
-
-  CurrencyCloudApi.withCurrencyCloudClient(this._authToken, this.client);
+  CurrencyCloudApi(this.client);
 }
 
 /// [CurrencyCloudClient] is used for communication with the CurrencyCloudService. It provides Request methods
@@ -23,7 +18,9 @@ class CurrencyCloudClient {
 
   AuthToken _authToken;
 
-  CurrencyCloudClient(this._authToken);
+  CurrencyCloudClient(this.loginId, this.apiKey) {
+    _authToken = new AuthToken();
+  }
 
   /// Sets auth headers in provided [headers] and sends HTTP GET request to
   /// given [uri] with [body] set as encoded uri parameters.

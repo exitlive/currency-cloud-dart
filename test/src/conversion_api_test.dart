@@ -12,12 +12,10 @@ main() {
   group(('conversion api test'), () {
     ConversionsApi conversionApi;
     MockClient mockClient;
-    AuthToken authToken;
 
     setUp(() {
       mockClient = new MockClient();
-      authToken = new AuthToken();
-      conversionApi = new ConversionsApi(authToken);
+      conversionApi = new ConversionsApi(mockClient);
       conversionApi.client = mockClient;
     });
 

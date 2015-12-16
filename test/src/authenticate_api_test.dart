@@ -1,3 +1,4 @@
+@Skip('Authentication is now handled by CurrencyCloudClient')
 library currency_cloud.authenticate_api_test;
 
 import 'dart:async';

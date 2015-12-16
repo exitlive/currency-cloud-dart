@@ -1,7 +1,7 @@
 part of currency_cloud;
 
 class PaymentsApi extends CurrencyCloudApi {
-  PaymentsApi(authToken) : super(authToken);
+  PaymentsApi(client) : super(client);
 
   /// [paymentType] will default to [PaymentType.regular] if not provided
   Future<Map<String, String>> create(Money money, String beneficiaryId, String reason, String reference,

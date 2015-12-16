@@ -1,7 +1,7 @@
 part of currency_cloud;
 
 class ConversionsApi extends CurrencyCloudApi {
-  ConversionsApi(authToken) : super(authToken);
+  ConversionsApi(client) : super(client);
 
   // TODO use package:Money instead of Strings
   Future<Map<String, String>> create(String buyCurrency, String sellCurrency, FixedSide fixedSide, String amount,

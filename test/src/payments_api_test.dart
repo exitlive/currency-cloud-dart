@@ -12,12 +12,10 @@ main() {
   group('PaymentsApi', () {
     PaymentsApi paymentsApi;
     MockClient mockClient;
-    AuthToken authToken;
 
     setUp(() {
       mockClient = new MockClient();
-      authToken = new AuthToken();
-      paymentsApi = new PaymentsApi(authToken);
+      paymentsApi = new PaymentsApi(mockClient);
       paymentsApi.client = mockClient;
     });
 

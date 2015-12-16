@@ -13,7 +13,6 @@ main() {
   group('BeneficiariesApi', () {
     BeneficiariesApi beneficiariesApi;
     MockClient mockClient;
-    AuthToken authToken;
     var currencyISO = 'EUR';
     var iban = 'DE89370400440532013000';
     var bicSwift = 'COBADEFF';
@@ -25,8 +24,7 @@ main() {
 
     setUp(() {
       mockClient = new MockClient();
-      authToken = new AuthToken();
-      beneficiariesApi = new BeneficiariesApi(authToken);
+      beneficiariesApi = new BeneficiariesApi(mockClient);
       beneficiariesApi.client = mockClient;
     });
 

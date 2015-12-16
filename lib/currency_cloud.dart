@@ -28,9 +28,7 @@ final Logger log = new Logger('CurrencyCloud');
 /// [CurrencyCloud] is the Class that provides the Interface for external calls. Using this library
 /// starts by getting a [CurrencyCloud] instance and calling the API methods one wants to use on that.
 class CurrencyCloud {
-  AuthToken _authToken;
-
-  bool get isAuthenticated => _authToken.isSet;
+  CurrencyCloudClient client;
 
   // Public viewable APIs according to CurrencyCloud Docs
   AuthenticateApi _authApi;
@@ -52,14 +50,14 @@ class CurrencyCloud {
   PaymentsApi get paymentsApi => _paymentsApi;
 
   CurrencyCloud(String loginId, String apiKey) {
-    _authToken = new AuthToken();
+    client = new CurrencyCloudClient(loginId, apiKey);
 
     // Initialize all APIs
-    _authApi = new AuthenticateApi(loginId, apiKey, _authToken);
-    _ratesApi = new RatesApi(_authToken);
-    _conversionApi = new ConversionsApi(_authToken);
-    _referenceDataApi = new ReferenceDataApi(_authToken);
-    _beneficiariesApi = new BeneficiariesApi(_authToken);
-    _paymentsApi = new PaymentsApi(_authToken);
+    _authApi = new AuthenticateApi(client);
+    _ratesApi = new RatesApi(client);
+    _conversionApi = new ConversionsApi(client);
+    _referenceDataApi = new ReferenceDataApi(client);
+    _beneficiariesApi = new BeneficiariesApi(client);
+    _paymentsApi = new PaymentsApi(client);
   }
 }
