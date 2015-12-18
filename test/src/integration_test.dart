@@ -40,9 +40,9 @@ main() {
     });
 
     test('authenticate call should set authToken', () async {
-      expect(cc.isAuthenticated, false);
+      expect(cc.client.isAuthenticated, false);
       await cc.authApi.authenticate();
-      expect(cc.isAuthenticated, true);
+      expect(cc.client.isAuthenticated, true);
     });
 
     test('ratesApi.detailed() call should return a quote', () async {

@@ -17,6 +17,7 @@ class CurrencyCloudClient {
   String loginId, apiKey;
 
   AuthToken _authToken;
+  bool get isAuthenticated => _authToken.isSet;
 
   CurrencyCloudClient(this.loginId, this.apiKey) {
     _authToken = new AuthToken();
