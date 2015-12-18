@@ -12,7 +12,7 @@ abstract class CurrencyCloudApi {
 /// [CurrencyCloudClient] is used for communication with the CurrencyCloudService. It provides Request methods
 /// like [get] and [post] which handle the basic communication overheads like adding authentication headers.
 class CurrencyCloudClient {
-  final String baseUri = 'https://devapi.thecurrencycloud.com/v2';
+  static final String baseUri = 'https://devapi.thecurrencycloud.com/v2';
 
   String loginId, apiKey;
 
@@ -28,7 +28,7 @@ class CurrencyCloudClient {
   Future<Map<String, String>> get(String uri, {Map<String, String> body, Map<String, String> headers}) async {
     uri = baseUri + uri;
 
-    headers = _setAuthHeader(headers);
+    headers = await _setAuthHeader(headers);
 
     if (body != null) {
       // list of the uri parameters to be set
@@ -45,8 +45,20 @@ class CurrencyCloudClient {
     log.finest('Sending GET request with HEADERS: ' + headers.toString());
     log.finest('to URL: ' + uri);
     var response = await http.get(uri, headers: headers);
+    var responseMap;
 
-    return _decodeResponse(response);
+    try {
+      responseMap = _decodeResponse(response);
+    } on AuthException {
+      log.finest('Got AuthException, reauthenticating');
+      await authenticate();
+      headers = await _setAuthHeader(headers);
+
+      response = await http.get(uri, headers: headers);
+      responseMap = _decodeResponse(response);
+    }
+
+    return responseMap;
   }
 
   /// Sets auth headers in provided [headers] and sends HTTP POST request to
@@ -54,59 +66,86 @@ class CurrencyCloudClient {
   Future<Map<String, String>> post(String methodUrl, {Map<String, String> body, Map<String, String> headers}) async {
     final String url = baseUri + methodUrl;
 
-    headers = _setAuthHeader(headers);
+    headers = await _setAuthHeader(headers);
     body ??= {};
+
+    var response, responseMap;
 
     log.finest('Sending post request to url: $url');
     log.finest('headers: ${headers.toString()}');
     log.finest('body: ${body.toString()}');
-    var response = await http.post(url, headers: headers, body: body);
+    response = await http.post(url, headers: headers, body: body);
 
-    return _decodeResponse(response);
+    try {
+      responseMap = _decodeResponse(response);
+    } on AuthException {
+      await authenticate();
+      headers = await _setAuthHeader(headers);
+
+      response = await http.post(url, headers: headers, body: body);
+      responseMap = _decodeResponse(response);
+    }
+
+    return responseMap;
   }
 
-  /// Authenticates this [CurrencyCloud] using given [loginId] and [apiKey]. This [CurrencyCloud] instance can
-  /// only be used after authentication.
+  /// Authenticates this [CurrencyCloud] using its [loginId] and [apiKey]. [CurrencyCloud] will authenticate
+  /// automatically if a Request is sent without authenticating or when the Authentication Token expires.
   authenticate() async {
-    var url = '/authenticate/api';
+    var authUri = baseUri + '/authenticate/api';
+
     var body = {'login_id': loginId, 'api_key': apiKey,};
 
-    var response = await post(url, body: body);
+    log.finest('Sending authentication request to url: $authUri');
+    log.finest('body: $body');
+
+    var response;
+    response = await http.post(authUri, body: body);
+    response = _decodeResponse(response);
+
+    log.finest('Got response Token: $response["auth_token"]');
 
     _authToken.value = response['auth_token'];
   }
 
   /// Closes authenticated Session
   closeSession() async {
-    var url = '/authenticate/close_session';
+    var uri = baseUri + '/authenticate/close_session';
 
-    await post(url);
+    await http.post(uri);
     _authToken.reset;
   }
 
   Map<String, String> _decodeResponse(http.Response response) {
     Map<String, String> responseBody = JSON.decode(response.body);
 
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+    if (responseBody.containsKey('error_code')) {
+      log.finest('error_code is: ' + responseBody['error_code']);
+      if (responseBody['error_code'] == 'auth_failed') {
+        log.finest('throw AuthException');
+        throw new AuthException(response.statusCode, responseBody);
+      }
+      log.finest('throw CurrencyCloudException');
       throw new CurrencyCloudException(response.statusCode, responseBody);
     }
 
-    if (responseBody.containsKey('error_code')) {
-      if (responseBody['error_code'] == 'auth_failed')
-        throw new AuthException(response.statusCode, responseBody);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
       throw new CurrencyCloudException(response.statusCode, responseBody);
     }
 
     return responseBody;
   }
 
-  /// Returns a new copy of given [headers] with the 'X-Auth-Token' header set if authToken has been set before. If [headers]
-  /// is not being provided returns a [headers] Map only containing of the set 'X-Auth-Token'.
-  Map<String, String> _setAuthHeader([Map<String, String> headers]) {
+  /// Returns a new copy of given [headers] with the 'X-Auth-Token' header set if authToken has been set before. If
+  /// [headers] is not being provided returns a [headers] Map only containing the set 'X-Auth-Token'.
+  Future<Map<String, String>> _setAuthHeader([Map<String, String> headers]) async {
     headers ??= {};
     var newHeaders = new Map.from(headers);
 
     if (_authToken.isSet) {
+      newHeaders['X-Auth-Token'] = _authToken.value;
+    } else {
+      await authenticate();
       newHeaders['X-Auth-Token'] = _authToken.value;
     }
 
@@ -115,15 +154,19 @@ class CurrencyCloudClient {
 }
 
 class CurrencyCloudException implements Exception {
-  int statusCode;
-  Map<String, String> body;
+  final String name = 'CurrencyCloudException';
+  final int statusCode;
+  final Map<String, String> body;
+  final String requestUri;
 
-  CurrencyCloudException(this.statusCode, this.body);
+  CurrencyCloudException(this.statusCode, this.body, {this.requestUri});
 
-  toString() => 'CurrencyCloudException(${statusCode}): ${body.toString()}';
+  toString() => '$name (${statusCode}): ${body.toString()}';
 }
 
 class AuthException extends CurrencyCloudException {
+  final String name = 'AuthException';
+
   AuthException(int statusCode, Map<String, String> body) : super(statusCode, body);
 }
 
