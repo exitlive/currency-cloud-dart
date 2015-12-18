@@ -5,12 +5,8 @@ class AuthenticateApi extends CurrencyCloudApi {
 
   /// Authenticates this [CurrencyCloud] using given [loginId] and [apiKey]. This [CurrencyCloud] instance can
   /// only be used after authentication.
-  authenticate() async {
-    client.authenticate();
-  }
+  authenticate() => client.authenticate();
 
   /// Closes authenticated Session
-  closeSession() async {
-    client.closeSession();
-  }
+  closeSession() => client.closeSession();
 }
