@@ -12,12 +12,10 @@ main() {
   group('reference data api', () {
     ReferenceDataApi referenceDataApi;
     MockClient mockClient;
-    AuthToken authToken;
 
     setUp(() {
       mockClient = new MockClient();
-      authToken = new AuthToken();
-      referenceDataApi = new ReferenceDataApi(authToken);
+      referenceDataApi = new ReferenceDataApi(mockClient);
       referenceDataApi.client = mockClient;
     });
 

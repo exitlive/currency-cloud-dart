@@ -13,7 +13,6 @@ main() {
   group('BeneficiariesApi', () {
     BeneficiariesApi beneficiariesApi;
     MockClient mockClient;
-    AuthToken authToken;
     var currencyISO = 'EUR';
     var iban = 'DE89370400440532013000';
     var bicSwift = 'COBADEFF';
@@ -25,12 +24,11 @@ main() {
 
     setUp(() {
       mockClient = new MockClient();
-      authToken = new AuthToken();
-      beneficiariesApi = new BeneficiariesApi(authToken);
+      beneficiariesApi = new BeneficiariesApi(mockClient);
       beneficiariesApi.client = mockClient;
     });
 
-    test('call with minimum with minimum amount of parameters should cause according post call', () async {
+    test('call with minimum amount of parameters should cause according post call', () async {
       var answer = {'much_answer': 'very_custom'};
       when(mockClient.post(any, body: any)).thenReturn(new Future.value(answer));
       var result = await beneficiariesApi.create(bankAccountHolderName, bankCountry, currency, name,

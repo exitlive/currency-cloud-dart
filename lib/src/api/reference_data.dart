@@ -1,7 +1,7 @@
 part of currency_cloud;
 
 class ReferenceDataApi extends CurrencyCloudApi {
-  ReferenceDataApi(authToken) : super(authToken);
+  ReferenceDataApi(client) : super(client);
 
   Future<Map<String, String>> beneficiaryRequiredDetails() {
     var uri = '/reference/beneficiary_required_details';

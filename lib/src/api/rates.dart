@@ -1,7 +1,7 @@
 part of currency_cloud;
 
 class RatesApi extends CurrencyCloudApi {
-  RatesApi(authToken) : super(authToken);
+  RatesApi(client) : super(client);
 
   // TODO use package:Money instead of Strings
   Future<Map<String, String>> detailed(String buyCurrency, String sellCurrency, fixedSide, String amount) async {

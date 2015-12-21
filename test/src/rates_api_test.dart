@@ -12,12 +12,10 @@ main() {
   group('rates', () {
     RatesApi ratesApi;
     MockClient mockClient;
-    AuthToken authToken;
 
     setUp(() {
       mockClient = new MockClient();
-      authToken = new AuthToken();
-      ratesApi = new RatesApi(authToken);
+      ratesApi = new RatesApi(mockClient);
       ratesApi.client = mockClient;
     });
 

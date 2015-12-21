@@ -1,7 +1,7 @@
 part of currency_cloud;
 
 class BeneficiariesApi extends CurrencyCloudApi {
-  BeneficiariesApi(authToken) : super(authToken);
+  BeneficiariesApi(client) : super(client);
 
   Future<Map<String, String>> create(String bankAccountHolderName, String bankCountry, Currency currency, String name,
       {String iban, String, bicSwift}) {

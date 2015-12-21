@@ -29,7 +29,7 @@ main() {
       loginId = Config.loginId;
       apiKey = Config.apiKey;
 
-      cc = new CurrencyCloud();
+      cc = new CurrencyCloud(loginId, apiKey);
 
       bankAccountHolderName = 'Hansi';
       bankCountry = 'DE';
@@ -40,9 +40,9 @@ main() {
     });
 
     test('authenticate call should set authToken', () async {
-      expect(cc.isAuthenticated, false);
-      await cc.authApi.authenticate(loginId, apiKey);
-      expect(cc.isAuthenticated, true);
+      expect(cc.client.isAuthenticated, false);
+      await cc.authApi.authenticate();
+      expect(cc.client.isAuthenticated, true);
     });
 
     test('ratesApi.detailed() call should return a quote', () async {
@@ -51,7 +51,7 @@ main() {
       var fixed_side = 'buy';
       var amount = '40.00';
 
-      await cc.authApi.authenticate(loginId, apiKey);
+      await cc.authApi.authenticate();
       var result = await cc.ratesApi.detailed(buyCurrency, sellCurrency, fixed_side, amount);
 
       expect(result['client_buy_currency'], buyCurrency);
@@ -69,7 +69,7 @@ main() {
       var reason = 'whatever';
       var termAgreement = true;
 
-      await cc.authApi.authenticate(loginId, apiKey);
+      await cc.authApi.authenticate();
       var result = await cc.conversionApi.create(buyCurrency, sellCurrency, fixed_side, amount, reason, termAgreement);
 
       expect(result['buy_currency'], buyCurrency);
@@ -79,13 +79,13 @@ main() {
     });
 
     test('referenceDataApi.beneficiaryRequiredDetails() should return something without Errors', () async {
-      await cc.authApi.authenticate(loginId, apiKey);
+      await cc.authApi.authenticate();
       var result = await cc.referenceDataApi.beneficiaryRequiredDetails();
       log.finest(result);
     });
 
     test('beneficiariesApi.create()', () async {
-      await cc.authApi.authenticate(loginId, apiKey);
+      await cc.authApi.authenticate();
       var result = await cc.beneficiariesApi
           .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
     });
@@ -102,7 +102,7 @@ main() {
       var amount = money.amountAsString;
       var termAgreement = true;
 
-      await cc.authApi.authenticate(loginId, apiKey);
+      await cc.authApi.authenticate();
       var conversion =
           await cc.conversionApi.create(buyCurrency, sellCurrency, fixedSide, amount, reason, termAgreement);
       var beneficiary = await cc.beneficiariesApi

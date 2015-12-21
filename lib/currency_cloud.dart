@@ -15,22 +15,20 @@ import 'package:money/money.dart';
 
 export 'package:money/money.dart';
 
-part 'src/currency_cloud_base.dart';
-part 'src/authenticate_api.dart';
-part 'src/rates_api.dart';
-part 'src/conversion_api.dart';
-part 'src/reference_data_api.dart';
-part 'src/beneficiaries_api.dart';
-part 'src/payments_api.dart';
+part 'src/base/currency_cloud_base.dart';
+part 'src/api/authenticate.dart';
+part 'src/api/rates.dart';
+part 'src/api/conversion.dart';
+part 'src/api/reference_data.dart';
+part 'src/api/beneficiaries.dart';
+part 'src/api/payments.dart';
 
 final Logger log = new Logger('CurrencyCloud');
 
 /// [CurrencyCloud] is the Class that provides the Interface for external calls. Using this library
 /// starts by getting a [CurrencyCloud] instance and calling the API methods one wants to use on that.
 class CurrencyCloud {
-  AuthToken _authToken;
-
-  bool get isAuthenticated => _authToken.isSet;
+  CurrencyCloudClient client;
 
   // Public viewable APIs according to CurrencyCloud Docs
   AuthenticateApi _authApi;
@@ -51,15 +49,15 @@ class CurrencyCloud {
   PaymentsApi _paymentsApi;
   PaymentsApi get paymentsApi => _paymentsApi;
 
-  CurrencyCloud() {
-    _authToken = new AuthToken();
+  CurrencyCloud(String loginId, String apiKey) {
+    client = new CurrencyCloudClient(loginId, apiKey);
 
     // Initialize all APIs
-    _authApi = new AuthenticateApi(_authToken);
-    _ratesApi = new RatesApi(_authToken);
-    _conversionApi = new ConversionsApi(_authToken);
-    _referenceDataApi = new ReferenceDataApi(_authToken);
-    _beneficiariesApi = new BeneficiariesApi(_authToken);
-    _paymentsApi = new PaymentsApi(_authToken);
+    _authApi = new AuthenticateApi(client);
+    _ratesApi = new RatesApi(client);
+    _conversionApi = new ConversionsApi(client);
+    _referenceDataApi = new ReferenceDataApi(client);
+    _beneficiariesApi = new BeneficiariesApi(client);
+    _paymentsApi = new PaymentsApi(client);
   }
 }
