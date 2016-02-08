@@ -18,4 +18,10 @@ class BeneficiariesApi extends CurrencyCloudApi {
 
     return client.post(uri, body: body);
   }
+
+  Future<Map<String, String>> retrieve(String beneficiaryId) {
+    var uri = '/beneficiaries/${beneficiaryId}';
+
+    return client.get(uri);
+  }
 }

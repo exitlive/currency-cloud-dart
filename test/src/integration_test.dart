@@ -84,10 +84,22 @@ main() {
       log.finest(result);
     });
 
-    test('beneficiariesApi.create()', () async {
+    test('beneficiariesApi.create() and retrieve()', () async {
       await cc.authApi.authenticate();
       var result = await cc.beneficiariesApi
           .create(bankAccountHolderName, bankCountry, currency, name, iban: iban, bicSwift: bicSwift);
+
+      expect(result['bank_account_holder_name'], bankAccountHolderName);
+
+      var beneficiaryId = result['id'];
+      var retrieveResult = await cc.beneficiariesApi.retrieve(beneficiaryId);
+
+      expect(retrieveResult['bank_account_holder_name'], bankAccountHolderName);
+      expect(retrieveResult['bank_country'], bankCountry);
+      expect(retrieveResult['currency'], currency.toString());
+      expect(retrieveResult['name'], name);
+      expect(retrieveResult['iban'], iban);
+      expect(retrieveResult['bic_swift'], bicSwift);
     });
 
     test('paymentsApi.create()', () async {
