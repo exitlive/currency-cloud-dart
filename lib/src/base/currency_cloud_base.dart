@@ -12,16 +12,18 @@ abstract class CurrencyCloudApi {
 /// [CurrencyCloudClient] is used for communication with the CurrencyCloudService. It provides Request methods
 /// like [get] and [post] which handle the basic communication overheads like adding authentication headers.
 class CurrencyCloudClient {
-  static final String baseUri = 'https://devapi.thecurrencycloud.com/v2';
+  static final String devUri = 'https://devapi.thecurrencycloud.com/v2';
+  static final String liveUri = 'https://api.thecurrencycloud.com/v2';
+
+  final String baseUri;
 
   String loginId, apiKey;
 
-  AuthToken _authToken;
+  final AuthToken _authToken = new AuthToken();
   bool get isAuthenticated => _authToken.isSet;
 
-  CurrencyCloudClient(this.loginId, this.apiKey) {
-    _authToken = new AuthToken();
-  }
+  /// Provide true for [useLiveUri] if you want to use this client in production and trigger real money transfers
+  CurrencyCloudClient(this.loginId, this.apiKey, {bool useLiveUri: false}) : baseUri = useLiveUri ? liveUri : devUri;
 
   /// Sets auth headers in provided [headers] and sends HTTP GET request to
   /// given [uri] with [body] set as encoded uri parameters.

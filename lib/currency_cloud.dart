@@ -49,8 +49,9 @@ class CurrencyCloud {
   PaymentsApi _paymentsApi;
   PaymentsApi get paymentsApi => _paymentsApi;
 
-  CurrencyCloud(String loginId, String apiKey) {
-    client = new CurrencyCloudClient(loginId, apiKey);
+  /// Provide true for [useLiveUri] if you want to use this client in production and trigger real money transfers
+  CurrencyCloud(String loginId, String apiKey, {bool useLiveUri: false}) {
+    client = new CurrencyCloudClient(loginId, apiKey, useLiveUri: useLiveUri);
 
     // Initialize all APIs
     _authApi = new AuthenticateApi(client);
