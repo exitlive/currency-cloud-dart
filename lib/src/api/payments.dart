@@ -4,7 +4,7 @@ class PaymentsApi extends CurrencyCloudApi {
   PaymentsApi(client) : super(client);
 
   /// [paymentType] will default to [PaymentType.regular] if not provided
-  Future<Map<String, String>> create(Money money, String beneficiaryId, String reason, String reference,
+  Future<Map<String, dynamic>> create(Money money, String beneficiaryId, String reason, String reference,
       {String conversionId, PaymentType paymentType}) {
     var uri = '/payments/create';
 

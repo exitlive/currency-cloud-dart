@@ -4,7 +4,7 @@ class RatesApi extends CurrencyCloudApi {
   RatesApi(client) : super(client);
 
   // TODO use package:Money instead of Strings
-  Future<Map<String, String>> detailed(String buyCurrency, String sellCurrency, fixedSide, String amount) async {
+  Future<Map<String, dynamic>> detailed(String buyCurrency, String sellCurrency, fixedSide, String amount) async {
     var url = '/rates/detailed';
 
     var body = {

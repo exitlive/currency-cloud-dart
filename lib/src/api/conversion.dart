@@ -4,7 +4,7 @@ class ConversionsApi extends CurrencyCloudApi {
   ConversionsApi(client) : super(client);
 
   // TODO use package:Money instead of Strings
-  Future<Map<String, String>> create(String buyCurrency, String sellCurrency, FixedSide fixedSide, String amount,
+  Future<Map<String, dynamic>> create(String buyCurrency, String sellCurrency, FixedSide fixedSide, String amount,
       String reason, bool termAgreement) async {
     var url = '/conversions/create';
 

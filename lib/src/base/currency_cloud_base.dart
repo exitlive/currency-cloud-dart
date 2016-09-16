@@ -27,7 +27,7 @@ class CurrencyCloudClient {
 
   /// Sets auth headers in provided [headers] and sends HTTP GET request to
   /// given [uri] with [body] set as encoded uri parameters.
-  Future<Map<String, String>> get(String uri, {Map<String, String> body, Map<String, String> headers}) async {
+  Future<Map<String, dynamic>> get(String uri, {Map<String, String> body, Map<String, String> headers}) async {
     uri = baseUri + uri;
 
     headers = await _setAuthHeader(headers);
@@ -65,7 +65,7 @@ class CurrencyCloudClient {
 
   /// Sets auth headers in provided [headers] and sends HTTP POST request to
   /// given [methodUrl].
-  Future<Map<String, String>> post(String methodUrl, {Map<String, String> body, Map<String, String> headers}) async {
+  Future<Map<String, dynamic>> post(String methodUrl, {Map<String, String> body, Map<String, String> headers}) async {
     final String url = baseUri + methodUrl;
 
     headers = await _setAuthHeader(headers);
@@ -121,9 +121,12 @@ class CurrencyCloudClient {
     _authToken.reset;
   }
 
-  Map<String, String> _decodeResponse(http.Response response) {
-    Map<String, String> responseBody = JSON.decode(response.body);
-
+  Map<String, dynamic> _decodeResponse(http.Response response) {
+    var responseBody = JSON.decode(response.body);
+    if (!(responseBody is Map)) {
+      log.finest('Decoded response body was not a json map');
+      throw new CurrencyCloudException(response.statusCode, responseBody);
+    }
     if (responseBody.containsKey('error_code')) {
       log.finest('error_code is: ' + responseBody['error_code']);
       if (responseBody['error_code'] == 'auth_failed') {

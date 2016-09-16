@@ -7,7 +7,7 @@ class ReferenceDataApi extends CurrencyCloudApi {
   /// [currency] is the currency of the beneficiary bank account
   /// [bankAccountCountry] is the country of the beneficiary bank account
   /// [beneficiaryCountry] is the nationality of the beneficiary
-  Future<Map<String, String>> beneficiaryRequiredDetails(
+  Future<Map<String, dynamic>> beneficiaryRequiredDetails(
       {String currency, String bankAccountCountry, String beneficiaryCountry}) {
     var uri = '/reference/beneficiary_required_details';
     var body = {};
