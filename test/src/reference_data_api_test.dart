@@ -26,5 +26,15 @@ main() {
       await referenceDataApi.beneficiaryRequiredDetails();
       verify(mockClient.get(uri)).called(1);
     });
+
+    test('call to beneficiaryRequiredDetails with arguments should do according GET call', () async {
+      var uri = '/reference/beneficiary_required_details';
+
+      when(mockClient.get(any, body: any)).thenReturn(new Future.value('Someanswer'));
+      await referenceDataApi.beneficiaryRequiredDetails(
+          currency: 'EUR', bankAccountCountry: 'AT', beneficiaryCountry: 'DE');
+      verify(mockClient.get(uri, body: {'currency': 'EUR', 'bankAccountCountry': 'AT', 'beneficiaryCountry': 'DE'}))
+          .called(1);
+    });
   });
 }
