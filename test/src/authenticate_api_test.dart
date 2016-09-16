@@ -22,7 +22,7 @@ main() {
       authToken = new AuthToken();
       loginId = 'someLoginId';
       apiKey = 'someApiKey';
-      authenticateApi = new AuthenticateApi(loginId, apiKey, authToken);
+      authenticateApi = new AuthenticateApi(mockClient);
       authenticateApi.client = mockClient;
     });
 

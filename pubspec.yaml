@@ -1,8 +1,10 @@
 name: currency_cloud
 description: A starting point for Dart libraries or applications.
-version: 0.0.2
-author: Daniel Domberger <daniel.domberger@exitlive.io>
-
+homepage: https://github.com/exitlive/currency-cloud-dart
+version: 0.0.3
+authors:
+  - Daniel Domberger <daniel.domberger@exit.live>
+  - Martin Flucka <martin.flucka@exit.live>
 environment:
   sdk: '>=1.0.0 <2.0.0'
 

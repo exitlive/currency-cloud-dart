@@ -96,7 +96,10 @@ class CurrencyCloudClient {
   authenticate() async {
     var authUri = baseUri + '/authenticate/api';
 
-    var body = {'login_id': loginId, 'api_key': apiKey,};
+    var body = {
+      'login_id': loginId,
+      'api_key': apiKey,
+    };
 
     log.finest('Sending authentication request to url: $authUri');
     log.finest('body: $body');
