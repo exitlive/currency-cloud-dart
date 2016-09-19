@@ -12,8 +12,8 @@ class ReferenceDataApi extends CurrencyCloudApi {
     var uri = '/reference/beneficiary_required_details';
     var body = {};
     if (currency != null) body['currency'] = currency;
-    if (bankAccountCountry != null) body['bankAccountCountry'] = bankAccountCountry;
-    if (beneficiaryCountry != null) body['beneficiaryCountry'] = beneficiaryCountry;
+    if (bankAccountCountry != null) body['bank_account_country'] = bankAccountCountry;
+    if (beneficiaryCountry != null) body['beneficiary_country'] = beneficiaryCountry;
     if (body.isEmpty) {
       return client.get(uri);
     } else {

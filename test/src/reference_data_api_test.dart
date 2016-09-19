@@ -33,7 +33,7 @@ main() {
       when(mockClient.get(any, body: any)).thenReturn(new Future.value('Someanswer'));
       await referenceDataApi.beneficiaryRequiredDetails(
           currency: 'EUR', bankAccountCountry: 'AT', beneficiaryCountry: 'DE');
-      verify(mockClient.get(uri, body: {'currency': 'EUR', 'bankAccountCountry': 'AT', 'beneficiaryCountry': 'DE'}))
+      verify(mockClient.get(uri, body: {'currency': 'EUR', 'bank_account_country': 'AT', 'beneficiary_country': 'DE'}))
           .called(1);
     });
   });
