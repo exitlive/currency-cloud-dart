@@ -18,6 +18,7 @@ export 'package:money/money.dart';
 part 'src/base/currency_cloud_base.dart';
 part 'src/api/authenticate.dart';
 part 'src/api/rates.dart';
+part 'src/api/balances.dart';
 part 'src/api/conversion.dart';
 part 'src/api/reference_data.dart';
 part 'src/api/beneficiaries.dart';
@@ -40,6 +41,9 @@ class CurrencyCloud {
   ConversionsApi _conversionApi;
   ConversionsApi get conversionApi => _conversionApi;
 
+  BalancesApi _balancesApi;
+  BalancesApi get balancesApi => _balancesApi;
+
   ReferenceDataApi _referenceDataApi;
   ReferenceDataApi get referenceDataApi => _referenceDataApi;
 
@@ -57,6 +61,7 @@ class CurrencyCloud {
     _authApi = new AuthenticateApi(client);
     _ratesApi = new RatesApi(client);
     _conversionApi = new ConversionsApi(client);
+    _balancesApi = new BalancesApi(client);
     _referenceDataApi = new ReferenceDataApi(client);
     _beneficiariesApi = new BeneficiariesApi(client);
     _paymentsApi = new PaymentsApi(client);
