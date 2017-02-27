@@ -12,8 +12,8 @@ abstract class CurrencyCloudApi {
 /// [CurrencyCloudClient] is used for communication with the CurrencyCloudService. It provides Request methods
 /// like [get] and [post] which handle the basic communication overheads like adding authentication headers.
 class CurrencyCloudClient {
-  static final String devUri = 'https://devapi.thecurrencycloud.com/v2';
-  static final String liveUri = 'https://api.thecurrencycloud.com/v2';
+  static final String devUri = 'https://devapi.currencycloud.com/v2';
+  static final String liveUri = 'https://api.currencycloud.com/v2';
 
   final String baseUri;
 
